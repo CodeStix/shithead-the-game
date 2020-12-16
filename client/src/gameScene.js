@@ -1,3 +1,14 @@
+window.config = {
+    type: Phaser.AUTO,
+    width: Math.min(window.innerWidth, window.innerHeight * (3 / 4)),
+    height: window.innerHeight,
+    /*pixelArt: true,*/
+    physics: {
+        default: "arcade",
+    },
+    scene: [],
+};
+
 function stackToString(stack) {
     return stack.stackName + (stack.stackOwner === null ? "" : ":" + stack.stackOwner.name);
 }

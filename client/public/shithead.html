@@ -19,27 +19,14 @@
         <link rel="stylesheet" href="/css/game.css" />
         <script src="../src/phaser.min.js"></script>
         <!--<script src="/js/shake.js"></script>-->
-        <script src="../src/GameScene.js"></script>
-        <script src="../src/ShitHeadHandler.js"></script>
+        <script src="../src/gameScene.js"></script>
+        <script src="../src/shitheadHandler.js"></script>
     </head>
     <body>
         <script>
-            var config = {
-                type: Phaser.AUTO,
-                width: Math.min(window.innerWidth, window.innerHeight * (3 / 4)),
-                height: window.innerHeight,
-                /*pixelArt: true,*/
-                physics: {
-                    default: "arcade",
-                },
-                scene: [],
-            };
-
             var gameObject = new ShitHeadHandler("codestix");
             config.scene.push(gameObject);
-
-            var game = new Phaser.Game(config);
-
+            new Phaser.Game(config);
             window.onbeforeunload = () => gameObject.server.close();
         </script>
     </body>
