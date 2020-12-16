@@ -2,7 +2,9 @@ function stackToString(stack) {
     return stack.stackName + (stack.stackOwner === null ? "" : ":" + stack.stackOwner.name);
 }
 
-class GameScene extends Phaser.Scene {
+window.GameScene = class GameScene extends (
+    Phaser.Scene
+) {
     constructor(localPlayerName) {
         super({ key: "GameScene" });
         console.log("YOUR NAME", localPlayerName);
@@ -23,7 +25,12 @@ class GameScene extends Phaser.Scene {
     }
 
     create() {
-        var statusText = this.add.text(0, 10, "Connecting...", { fixedWidth: config.width, align: "center", fontFamily: "Wellfleet", color: "#f80" });
+        var statusText = this.add.text(0, 10, "Connecting...", {
+            fixedWidth: config.width,
+            align: "center",
+            fontFamily: "Wellfleet",
+            color: "#f80",
+        });
         statusText.setFontSize(12);
         statusText.setDepth(10000000);
 
@@ -222,11 +229,30 @@ class GameScene extends Phaser.Scene {
         var maxWidth = config.width;
         var maxHeigth = config.height;
         var inventory = null;
-        if (stackType === "stack") inventory = new CardStack(this, parseFloat(xPercent) * maxWidth, parseFloat(yPercent) * maxHeigth, stackName, stackOwner);
+        if (stackType === "stack")
+            inventory = new CardStack(
+                this,
+                parseFloat(xPercent) * maxWidth,
+                parseFloat(yPercent) * maxHeigth,
+                stackName,
+                stackOwner
+            );
         else if (stackType === "inventory")
-            inventory = new CardInventory(this, parseFloat(xPercent) * maxWidth, parseFloat(yPercent) * maxHeigth, stackName, stackOwner);
+            inventory = new CardInventory(
+                this,
+                parseFloat(xPercent) * maxWidth,
+                parseFloat(yPercent) * maxHeigth,
+                stackName,
+                stackOwner
+            );
         else if (stackType === "inventory_vertical")
-            inventory = new CardInventoryVertical(this, parseFloat(xPercent) * maxWidth, parseFloat(yPercent) * maxHeigth, stackName, stackOwner);
+            inventory = new CardInventoryVertical(
+                this,
+                parseFloat(xPercent) * maxWidth,
+                parseFloat(yPercent) * maxHeigth,
+                stackName,
+                stackOwner
+            );
         else {
             console.error("unknown stack type", stackType);
             return null;
@@ -258,7 +284,7 @@ class GameScene extends Phaser.Scene {
     isMaster(player) {
         return player.name === this.masterPlayerName;
     }
-}
+};
 
 /*class Player
 {
@@ -332,7 +358,9 @@ class CardStack extends Phaser.GameObjects.Sprite {
         card // ONLY THE CARD CLASS SHOULD CALL THIS
     ) {
         if (this.containingCards.includes(card)) {
-            console.warn("CardStack.addCard() was called, but the card to add was already in the stack, this should not happen!");
+            console.warn(
+                "CardStack.addCard() was called, but the card to add was already in the stack, this should not happen!"
+            );
             return;
         }
 
@@ -349,7 +377,9 @@ class CardStack extends Phaser.GameObjects.Sprite {
         card // ONLY THE CARD CLASS SHOULD CALL THIS
     ) {
         if (!this.containingCards.includes(card)) {
-            console.warn("CardStack.removeCard() was called, but the card to remove was not in the stack, this should not happen!");
+            console.warn(
+                "CardStack.removeCard() was called, but the card to remove was not in the stack, this should not happen!"
+            );
             return;
         }
 
@@ -506,7 +536,12 @@ class CardInventory extends CardStack {
         var xOffset = (-(this.containingCards.length - 1) / 2) * xCardSplit;
         var fan = -(this.containingCards.length - 1) / 2;
         this.containingCards.forEach((card, index) => {
-            card.snapCardTo(this.x + xOffset, this.y, this.angle + fan++, (this.containingCards.length - index - 1) * 50);
+            card.snapCardTo(
+                this.x + xOffset,
+                this.y,
+                this.angle + fan++,
+                (this.containingCards.length - index - 1) * 50
+            );
             xOffset += xCardSplit;
             //card.flipCard(true);
         });
@@ -550,7 +585,12 @@ class CardInventoryVertical extends CardInventory {
         var yOffset = (-(this.containingCards.length - 1) / 2) * yCardSplit;
         var fan = -(this.containingCards.length - 1) / 2;
         this.containingCards.forEach((card, index) => {
-            card.snapCardTo(this.x, this.y + yOffset, this.angle + fan++, (this.containingCards.length - index - 1) * 50);
+            card.snapCardTo(
+                this.x,
+                this.y + yOffset,
+                this.angle + fan++,
+                (this.containingCards.length - index - 1) * 50
+            );
             yOffset += yCardSplit;
             //card.flipCard(true);
         });
@@ -596,7 +636,10 @@ class DynamicCard extends Phaser.GameObjects.Sprite {
             var newSnapStack = null,
                 minDistance = 100000000.0;
             for (let i = 0; i < snapStacks.length; i++) {
-                const distance = Math.sqrt((this.x - snapStacks[i].x) * (this.x - snapStacks[i].x) + (this.y - snapStacks[i].y) * (this.y - snapStacks[i].y));
+                const distance = Math.sqrt(
+                    (this.x - snapStacks[i].x) * (this.x - snapStacks[i].x) +
+                        (this.y - snapStacks[i].y) * (this.y - snapStacks[i].y)
+                );
                 if (distance < minDistance) {
                     newSnapStack = snapStacks[i];
                     minDistance = distance;
