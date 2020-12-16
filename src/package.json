@@ -4,7 +4,7 @@
   "description": "The server needed for the shithead game",
   "main": "server.ts",
   "scripts": {
-    "test": "node ./tests/stackTest.js",
+    "test": "node tests/stackTest.js",
     "start": "ts-node server.ts"
   },
   "author": "Stijn Rogiest",

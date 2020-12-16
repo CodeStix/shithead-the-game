@@ -1,5 +1,11 @@
+import ws from "ws";
+
 export type GameState = "waiting";
-export type Player = any;
+export type Player = {
+    joinedGame: Game | null;
+    socket: ws;
+    name: string;
+};
 
 export class Game {
     name: string;

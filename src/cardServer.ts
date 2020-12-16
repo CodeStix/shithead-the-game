@@ -1,7 +1,7 @@
 import ws from "ws";
-import { Game, Player } from "./game";
+import { Game, GameState, Player } from "./game";
 
-let players: Player = [];
+let players: Player[] = [];
 let games: Game[] = [new Game("game0", 4)];
 let anyGameIndex = 0;
 console.log("starting websocket server");
@@ -15,7 +15,7 @@ server.on("connection", (socket) => {
         return;
     }
 
-    socket.on("close", (code, reason) => {
+    socket.on("close", () => {
         var player = players.find((pl) => pl.socket === socket);
         if (player) {
             if (player.joinedGame) {
@@ -36,23 +36,25 @@ server.on("connection", (socket) => {
             var player = players.find((pl) => pl.socket === socket);
 
             switch (args[0]) {
-                case "gamestate":
+                case "gamestate": {
                     if (!player || !player.joinedGame) {
                         console.warn("game or player does not exist");
                         continue;
                     }
-                    player.joinedGame.setGameState(args[1]);
+                    player.joinedGame.setGameState(args[1] as GameState);
                     continue;
+                }
 
-                case "gamestatevote":
+                case "gamestatevote": {
                     if (!player || !player.joinedGame) {
                         console.warn("game or player does not exist");
                         continue;
                     }
-                    player.joinedGame.voteSetGameState(args[1]);
+                    player.joinedGame.voteSetGameState(args[1] as GameState);
                     continue;
+                }
 
-                case "setplayer":
+                case "setplayer": {
                     if (player) {
                         player.name = args[1];
                         continue;
@@ -72,8 +74,9 @@ server.on("connection", (socket) => {
                         players.push(player);
                     }
                     continue;
+                }
 
-                case "joinany":
+                case "joinany": {
                     var game = games[anyGameIndex];
                     if (!game || !player) {
                         console.warn("game or player does not exist");
@@ -92,8 +95,9 @@ server.on("connection", (socket) => {
                     }
                     socket.send("setmaster " + game.players[0].name);
                     continue;
+                }
 
-                case "join":
+                case "join": {
                     var game = games[parseInt(args[1])];
                     if (!game || !player) {
                         console.warn("game or player does not exist");
@@ -115,8 +119,9 @@ server.on("connection", (socket) => {
                     }
                     socket.send("setmaster " + game.players[0].name);
                     continue;
+                }
 
-                case "leave":
+                case "leave": {
                     if (!player || !player.joinedGame) {
                         console.warn("cannot leave nothing");
                         continue;
@@ -125,13 +130,15 @@ server.on("connection", (socket) => {
                         console.warn("could not leave");
                     }
                     continue;
+                }
 
-                case "close":
+                case "close": {
                     socket.close();
                     continue;
+                }
 
                 case "broadcastall":
-                case "broadcast":
+                case "broadcast": {
                     var includeSender = args[0] === "broadcastall";
                     if (!player || !player.joinedGame) {
                         console.warn("cannot broadcast in nothing");
@@ -142,10 +149,12 @@ server.on("connection", (socket) => {
                             player.joinedGame.players[j].socket.send(args.slice(1).join(" "));
                     }
                     continue;
+                }
 
-                default:
+                default: {
                     console.error("unknown command", command);
                     continue;
+                }
             }
         }
     });
