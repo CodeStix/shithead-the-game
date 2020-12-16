@@ -1,9 +1,9 @@
 /// <reference path="global.d.ts" />
 
-import("./cardServer");
 import express, { ErrorRequestHandler, NextFunction } from "express";
 import expressSession from "express-session";
 import path from "path";
+import { CardServer } from "./cardServer";
 
 const app = express();
 
@@ -75,4 +75,5 @@ let errorHandler: ErrorRequestHandler = (err, req, res, next) => {
 };
 app.use(errorHandler);
 
-app.listen(80);
+let server = app.listen(80);
+new CardServer(server);

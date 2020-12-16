@@ -45,7 +45,10 @@ window.GameScene = class GameScene extends (
         statusText.setFontSize(12);
         statusText.setDepth(10000000);
 
-        this.server = new WebSocket("ws://192.168.0.8:81", "cards"); //shithead.codestix.nl
+        this.server = new WebSocket(
+            (window.location.protocol === "https:" ? "wss://" : "ws://") + window.location.hostname + ":80/ws",
+            "cards"
+        );
         var didConnect = false;
         this.server.onopen = () => {
             didConnect = true;

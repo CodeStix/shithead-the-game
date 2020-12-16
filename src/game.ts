@@ -10,7 +10,7 @@ export type Player = {
 export class Game {
     name: string;
     maxPlayers: number;
-    players: Player[];
+    players: Player[] = [];
     gameState: GameState;
     gameStateVoteCount: number;
 
