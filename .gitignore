@@ -1,2 +1,5 @@
-src/node_modules/
-client/dist
+server/node_modules/
+server/public/
+client/dist/
+client/node_modules/
+client/.cache/
