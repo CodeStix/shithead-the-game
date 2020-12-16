@@ -24,7 +24,7 @@
     </head>
     <body>
         <script>
-            var gameObject = new ShitHeadHandler("codestix");
+            var gameObject = new ShitHeadHandler();
             config.scene.push(gameObject);
             new Phaser.Game(config);
             window.onbeforeunload = () => gameObject.server.close();

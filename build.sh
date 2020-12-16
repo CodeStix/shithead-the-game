@@ -3,5 +3,6 @@
 set -e 
 
 cd client
-parcel build
+yarn build
+cd ..
 cp -r client/dist server/public
