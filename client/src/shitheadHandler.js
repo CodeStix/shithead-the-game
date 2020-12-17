@@ -126,8 +126,7 @@ window.ShitHeadHandler = class ShitHeadHandler extends (
     onJoin(
         player // called when a new player joined
     ) {
-        console.log("onJoin", player.name);
-
+        console.log("join", player.name);
         if (this.players.length > 1 && this.isDealer()) {
             this.gameModeButton.visible = true;
             this.readyButton.visible = true;
@@ -202,7 +201,7 @@ window.ShitHeadHandler = class ShitHeadHandler extends (
     onLeft(
         player // called when a player leaves
     ) {
-        console.log("onLeft", player.name);
+        console.log("left", player.name);
 
         if (this.gameState === "waiting") {
             if (this.players.length < 2) this.readyButton.visible = false;
@@ -430,11 +429,7 @@ window.ShitHeadHandler = class ShitHeadHandler extends (
 
             var throwStack = this.getStack("throw");
             throwStack.onCardWantsToGoHere = (newCard) => {
-                if (!this.isAtTurn()) {
-                    console.log("NOT AT TURN");
-                    return false;
-                } else if (newCard.snappedToStack.stackOwner !== this.localPlayer) {
-                    console.log("CANNOT TAKE CARD OF OTHER PLAYER");
+                if (!this.isAtTurn() || newCard.snappedToStack.stackOwner !== this.localPlayer) {
                     return false;
                 }
 
@@ -464,7 +459,6 @@ window.ShitHeadHandler = class ShitHeadHandler extends (
                     throwStack.areTopCardsSameValue(4) ||
                     (newCard.cardType === JOKER && throwStack.areTopCardsSameValue(2)); // if the top 4 cards are the same, or a 10 is thrown, burn it
                 if (burn) {
-                    console.log("BURN!!");
                     this.explosion.anims.play("explode");
                     this.dealCards(throwStack, [this.getStack("burned")], throwStack.containingCards.length);
                     this.previouslyThrownValueThisRound = null;
@@ -620,12 +614,6 @@ window.ShitHeadHandler = class ShitHeadHandler extends (
             if (!shouldTryThrow) {
                 this.turnText.text = "Oof";
                 setTimeout(() => this.takeThrowStack(), 500);
-            } else {
-                this.localPlayer.inventory.containingCards
-                    .filter((card) => this.canPlay(card, this.localPlayer))
-                    .forEach((card) => {
-                        console.log("You can lay ", card.cardType, card.cardValue);
-                    });
             }
         } else {
             this.turnText.text = playerAtTurn.name + "'s turn!";
@@ -669,39 +657,29 @@ window.ShitHeadHandler = class ShitHeadHandler extends (
                 (card.cardType === JOKER ? 2 : 4)
         ) {
             // allow if can complete set
-            console.log("mayCardBeThrown()", "2 JOKERS or 4 OTHERS");
             return true;
         } else if (this.previouslyThrownValueThisRound !== null) {
             // only allow doubles
-            console.log("YOU ALREADY THREW THIS ROUND!");
             return this.previouslyThrownValueThisRound === card.cardValue;
         } else if (cardValue === 7 || card.cardType === JOKER) {
             // these cards can be thrown all the time
-            console.log("mayCardBeThrown()", "7 or JOKER");
             return true;
         } else if (underlayingType === JOKER) {
             // only allow odd cards on jokers
-            console.log("mayCardBeThrown()", "underlaying JOKER");
             return cardValue % 2 === 1;
         } else if (underlayingValue === 9) {
             // only allow card values <= 9 on the 9
-            console.log("mayCardBeThrown()", "underlaying 9");
             return cardValue <= 9;
         } else if (cardValue === 2) {
             // these cards can be thrown on all but the joker
-            console.log("mayCardBeThrown()", "2");
             return true;
         } else if (cardValue === 9 || cardValue === 10) {
-            console.log("mayCardBeThrown()", "9 or 10");
             return underlayingValue !== 14;
         } else if (cardValue === 8 || cardValue === 3) {
-            console.log("mayCardBeThrown()", "8 or 3");
             return cardValue >= underlayingValue;
         } else if (takeStack.isEmpty() && underlayingValue === 14 && cardValue === 5) {
-            console.log("mayCardBeThrown()", "takeStack === 0 and underlaying 14 and 5");
             return true;
         } else {
-            console.log("mayCardBeThrown()", "end", cardValue, ">", underlayingValue);
             return cardValue > underlayingValue;
         }
     }

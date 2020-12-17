@@ -1,3 +1,5 @@
+window.DEBUG = false;
+
 window.config = {
     type: Phaser.AUTO,
     width: Math.min(window.innerWidth, window.innerHeight * (3 / 4)),
@@ -18,7 +20,6 @@ window.GameScene = class GameScene extends (
 ) {
     constructor(localPlayerName) {
         super({ key: "GameScene" });
-        console.log("YOUR NAME", localPlayerName);
         this.localPlayer = {
             name: localPlayerName,
         };
@@ -65,12 +66,11 @@ window.GameScene = class GameScene extends (
                 switch (args[0]) {
                     case "setmaster":
                         this.masterPlayerName = args[1];
-                        console.log(`[CARDENGINE] ${this.masterPlayerName} is the master of the game!`);
+                        console.log(`${this.masterPlayerName} is the master of the game!`);
                         continue;
 
                     case "playersalreadyjoined":
                         var playerNames = args[1].split(",");
-                        console.log("playersalreadyjoined before", playerNames, this.players);
                         for (let j = playerNames.length - 1; j >= 0; j--) {
                             var playerObject = {
                                 name: playerNames[j],
@@ -79,7 +79,6 @@ window.GameScene = class GameScene extends (
                             this.players.unshift(playerObject);
                             this.onJoin(playerObject);
                         }
-                        console.log("playersalreadyjoined", playerNames, this.players);
                         continue;
 
                     case "playerjoined":
@@ -89,11 +88,9 @@ window.GameScene = class GameScene extends (
                         };
                         this.players.push(playerObject);
                         this.onJoin(playerObject);
-                        console.log("playerjoined", this.players);
                         continue;
 
                     case "playerleft":
-                        console.log("playerleft args", args);
                         var playerObject = this.players.find((pl) => pl.name === args[1]);
                         if (playerObject === undefined) {
                             console.error("Player left, but the player could not be found locally.");
@@ -625,8 +622,7 @@ window.DynamicCard = class DynamicCard extends (
         this.setInteractive();
         this.setDepth(currentCardDepth++);
 
-        //this.on("pointerdown", () => console.log("click card"));
-        this.on("drag", (_pointer, dragX, dragY) => this.setPosition(dragX, dragY));
+        this.on("drag", (_card, dragX, dragY) => this.setPosition(dragX, dragY));
         this.on("dragstart", () => {
             this.dragStartDepth = this.depth;
             this.setDepth(currentCardDepth++);
