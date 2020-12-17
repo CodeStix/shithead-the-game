@@ -17,17 +17,19 @@
         <link href="https://fonts.googleapis.com/css?family=Pacifico|Wellfleet&display=swap" rel="stylesheet" />
         <link rel="stylesheet" href="/css/styles.css" />
         <link rel="stylesheet" href="/css/game.css" />
-        <script src="../src/phaser.min.js"></script>
+        <script src="/js/phaser.min.js"></script>
+        <script src="/js/gameScene.js"></script>
+        <script src="/js/shitheadHandler.js"></script>
         <!--<script src="/js/shake.js"></script>-->
-        <script src="../src/gameScene.js"></script>
-        <script src="../src/shitheadHandler.js"></script>
     </head>
     <body>
         <script>
-            var gameObject = new ShitHeadHandler();
-            config.scene.push(gameObject);
-            new Phaser.Game(config);
-            window.onbeforeunload = () => gameObject.server.close();
+            (() => {
+                var gameObject = new ShitHeadHandler("{{playerName}}");
+                config.scene.push(gameObject);
+                new Phaser.Game(config);
+                window.onbeforeunload = () => gameObject.server.close();
+            })();
         </script>
     </body>
 </html>

@@ -4,7 +4,8 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "build": "rm -rf dist/ && parcel build public/shithead.html && cp -r public/img dist/img"
+    "build": "parcel build src/*.js -d ../server/public/js",
+    "start": "parcel src/*.js -d ../server/public/js"
   },
   "devDependencies": {
     "parcel": "^1.12.4"
