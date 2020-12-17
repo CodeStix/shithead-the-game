@@ -1,35 +1,20 @@
-<!DOCTYPE html>
-<html lang="en">
-    <head>
-        <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+{% extends "components/main.twig" %} 
 
-        <meta name="apple-mobile-web-app-capable" content="yes" />
-        <meta name="apple-mobile-web-app-status-bar-style" content="black" />
-        <link rel="apple-touch-icon" href="/img/icon-192.png" />
-        <link rel="icon" sizes="192x192" href="/img/icon-192.png" />
-        <meta name="apple-mobile-web-app-title" content="Shithead" />
-        <meta name="mobile-web-app-capable" content="yes" />
-        <link href="/manifest.json" rel="manifest" />
+{% block head %}
+<script src="/js/phaser.min.js"></script>
+<script src="/js/gameScene.js"></script>
+<script src="/js/shitheadHandler.js"></script>
+<link rel="stylesheet" href="/css/game.css" />
+<!--<script src="/js/shake.js"></script>-->
+{% endblock %} 
 
-        <title>Shithead: The Game</title>
-        <link href="https://fonts.googleapis.com/css?family=Pacifico|Wellfleet&display=swap" rel="stylesheet" />
-        <link rel="stylesheet" href="/css/styles.css" />
-        <link rel="stylesheet" href="/css/game.css" />
-        <script src="/js/phaser.min.js"></script>
-        <script src="/js/gameScene.js"></script>
-        <script src="/js/shitheadHandler.js"></script>
-        <!--<script src="/js/shake.js"></script>-->
-    </head>
-    <body>
-        <script>
-            (() => {
-                var gameObject = new ShitHeadHandler("{{playerName}}", true);
-                config.scene.push(gameObject);
-                new Phaser.Game(config);
-                window.onbeforeunload = () => gameObject.server.close();
-            })();
-        </script>
-    </body>
-</html>
+{% block body %}
+<script>
+    (() => {
+        var gameObject = new ShitHeadHandler("{{playerName}}", true);
+        config.scene.push(gameObject);
+        new Phaser.Game(config);
+        window.onbeforeunload = () => gameObject.server.close();
+    })();
+</script>
+{% endblock %}
