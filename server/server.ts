@@ -57,12 +57,11 @@ app.get("/logout", (req, res, next) => {
 });
 
 app.get("/game", (req, res, next) => {
-    const gameName = (req.query.gameName as string) || "ShitHead";
+    const gameName = (req.query.gameName as string) || "shithead";
     if (!gameName.match(/^[a-z0-9_]{1,32}$/i)) return res.redirect("/?problem=invalid-game-name");
     if (!req.session.playerName) return res.redirect("/?problem=no-player");
 
-    res.render("game", {
-        gameName: gameName,
+    res.render(gameName, {
         playerName: req.session.playerName,
     });
 });
