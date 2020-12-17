@@ -9,7 +9,7 @@ const app = express();
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-app.use(express.static(path.join(__dirname, "public")));
+app.use(express.static(path.join(__dirname, "../public")));
 app.use(
     expressSession({
         secret: "r!?N&Q6$8%Xg5J3s",
@@ -17,7 +17,7 @@ app.use(
         saveUninitialized: true,
     })
 );
-app.set("views", path.join(__dirname, "views"));
+app.set("views", path.join(__dirname, "../views"));
 app.set("view engine", "twig");
 
 app.get("/", (req, res, next) => {

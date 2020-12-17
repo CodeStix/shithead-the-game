@@ -2,7 +2,7 @@
   "name": "shithead-webserver",
   "version": "1.0.0",
   "description": "The server needed for the shithead game",
-  "main": "server.ts",
+  "main": "src/server.ts",
   "scripts": {
     "test": "node tests/stackTest.js",
     "start": "ts-node server.ts"
