@@ -9,9 +9,9 @@ window.config = {
     scene: [],
 };
 
-function stackToString(stack) {
+window.stackToString = function (stack) {
     return stack.stackName + (stack.stackOwner === null ? "" : ":" + stack.stackOwner.name);
-}
+};
 
 window.GameScene = class GameScene extends (
     Phaser.Scene
@@ -300,28 +300,13 @@ window.GameScene = class GameScene extends (
     }
 };
 
-/*class Player
-{
-    constructor(scene, name)
-    {
-        this.name = name;
+window.CLUBS = 0;
+window.HEARTS = 1;
+window.SPADES = 2;
+window.DIAMONDS = 3;
+window.JOKER = 4;
 
-        var finalStackHeight = config.height - 200;
-        this.finalPlayerStack1 = new CardStack(scene, config.width * (1 / 4), finalStackHeight, `player_${name}_final1`);
-        this.finalPlayerStack2 = new CardStack(scene, config.width * (2 / 4), finalStackHeight, `player_${name}_final2`);
-        this.finalPlayerStack3 = new CardStack(scene, config.width * (3 / 4), finalStackHeight, `player_${name}_final3`);
-    }
-}*/
-
-var currentCardDepth = 1;
-
-const CLUBS = 0;
-const HEARTS = 1;
-const SPADES = 2;
-const DIAMONDS = 3;
-const JOKER = 4;
-
-var cardTypeValueToSpriteFrame = function (cardType, cardValue, cardVisible) {
+window.cardTypeValueToSpriteFrame = function (cardType, cardValue, cardVisible) {
     const BACK_SPRITE_ID = 27; // 13: red, 27: blue
     if (!cardVisible) return BACK_SPRITE_ID;
     else if (cardType == 0) return cardValue - 1;
@@ -331,7 +316,9 @@ var cardTypeValueToSpriteFrame = function (cardType, cardValue, cardVisible) {
     else if (cardType == 4) return cardValue == 1 ? 41 : 55;
 };
 
-class CardStack extends Phaser.GameObjects.Sprite {
+window.CardStack = class CardStack extends (
+    Phaser.GameObjects.Sprite
+) {
     constructor(scene, x, y, stackName, stackOwner = null) {
         super(scene, x, y, "cardstack");
 
@@ -535,9 +522,11 @@ class CardStack extends Phaser.GameObjects.Sprite {
         });
         return i;
     }
-}
+};
 
-class CardInventory extends CardStack {
+window.CardInventory = class CardInventory extends (
+    CardStack
+) {
     constructor(scene, x, y, stackName, stackOwner = null) {
         super(scene, x, y, stackName, stackOwner);
 
@@ -582,9 +571,11 @@ class CardInventory extends CardStack {
         // inventory card should always overlay
         this.containingCards.forEach((card) => card.setDepth(currentCardDepth++));
     }
-}
+};
 
-class CardInventoryVertical extends CardInventory {
+window.CardInventoryVertical = class CardInventoryVertical extends (
+    CardInventory
+) {
     constructor(scene, x, y, stackName, stackOwner = null) {
         super(scene, x, y, stackName, stackOwner);
 
@@ -609,11 +600,14 @@ class CardInventoryVertical extends CardInventory {
             //card.flipCard(true);
         });
     }
-}
+};
 
+var currentCardDepth = 0;
 var currentCardIndex = 1;
 
-class DynamicCard extends Phaser.GameObjects.Sprite {
+window.DynamicCard = class DynamicCard extends (
+    Phaser.GameObjects.Sprite
+) {
     // cardType: 0 = klaver, 1 = hart, 2 = schop, 3 = ruit, 4 = joker, 5 = unknown
     // cardValue: 1 -> 13
 
@@ -719,4 +713,4 @@ class DynamicCard extends Phaser.GameObjects.Sprite {
             ease: this.snapToEase, //https://phaser.io/docs/2.6.2/Phaser.Easing.html
         });
     }
-}
+};
