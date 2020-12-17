@@ -15,4 +15,4 @@ This version of the game altered some rules:
 ## Running
 
 -   `client/` contains browser javascript code. Use npm script **start** to watch and build the javascript files to the `server/public/` folder in realtime.
--   `server/src/` contains webserver and websocket server code.
+-   `server/src/` contains webserver anjd websocket server code.

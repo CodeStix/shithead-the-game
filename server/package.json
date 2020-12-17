@@ -5,7 +5,8 @@
   "main": "src/server.ts",
   "scripts": {
     "test": "node tests/stackTest.js",
-    "start": "ts-node server.ts"
+    "start": "ts-node server.ts",
+    "build": "tsc"
   },
   "author": "Stijn Rogiest",
   "license": "ISC",
