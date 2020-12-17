@@ -1,9 +1,10 @@
 window.ShitHeadHandler = class ShitHeadHandler extends (
     GameScene
 ) {
-    constructor(localPlayerName) {
+    // eightsSkipOthers: enables a special rule where eights skip players, and they can be played on each other just like the three
+    constructor(localPlayerName, eightsSkipOthers = true) {
         super(localPlayerName);
-
+        this.eightsSkipOthers = eightsSkipOthers;
         this.registerCommand("turn", (args) => this.setTurn(args[1]));
     }
 
@@ -433,7 +434,7 @@ window.ShitHeadHandler = class ShitHeadHandler extends (
                     return false;
                 }
 
-                const mayThrow = this.canPlay(newCard, this.localPlayer);
+                const mayThrow = this.canPlayCard(newCard, this.localPlayer);
                 if (this.getPlayerStage(this.localPlayer) === 2) {
                     // if final hidden stack move
                     if (!mayThrow) {
@@ -463,7 +464,7 @@ window.ShitHeadHandler = class ShitHeadHandler extends (
                     this.dealCards(throwStack, [this.getStack("burned")], throwStack.containingCards.length);
                     this.previouslyThrownValueThisRound = null;
                     this.takeMinCards();
-                } else if (newCard.cardValue === 8) {
+                } else if (newCard.cardValue === 8 && this.eightsSkipOthers) {
                     this.skipTurns++;
                 }
 
@@ -584,13 +585,13 @@ window.ShitHeadHandler = class ShitHeadHandler extends (
             var shouldTryThrow = false;
             if (this.turnStartPlayerStage === 0) {
                 shouldTryThrow = !this.localPlayer.inventory.containingCards.every(
-                    (card) => !this.canPlay(card, this.localPlayer)
+                    (card) => !this.canPlayCard(card, this.localPlayer)
                 );
             } else if (this.turnStartPlayerStage === 1) {
                 shouldTryThrow =
-                    this.canPlay(this.localPlayer.finalStack1.containingCards[1], this.localPlayer) ||
-                    this.canPlay(this.localPlayer.finalStack2.containingCards[1], this.localPlayer) ||
-                    this.canPlay(this.localPlayer.finalStack3.containingCards[1], this.localPlayer);
+                    this.canPlayCard(this.localPlayer.finalStack1.containingCards[1], this.localPlayer) ||
+                    this.canPlayCard(this.localPlayer.finalStack2.containingCards[1], this.localPlayer) ||
+                    this.canPlayCard(this.localPlayer.finalStack3.containingCards[1], this.localPlayer);
             } else if (this.turnStartPlayerStage === 2) {
                 shouldTryThrow = true;
             } else {
@@ -620,9 +621,7 @@ window.ShitHeadHandler = class ShitHeadHandler extends (
         }
     }
 
-    canPlay(card, player) {
-        // <-- only called if the local player relocates a card
-
+    canPlayCard(card, player) {
         if (!card) return false;
 
         var cardValue = card.cardValue;
@@ -674,8 +673,10 @@ window.ShitHeadHandler = class ShitHeadHandler extends (
             // these cards can be thrown on all but the joker
             return true;
         } else if (cardValue === 9 || cardValue === 10) {
+            // these cards can be thrown on all but the ace
             return underlayingValue !== 14;
-        } else if (cardValue === 8 || cardValue === 3) {
+        } else if ((this.eightsSkipOthers && cardValue === 8) || cardValue === 3) {
+            // these cards can be placed on itself
             return cardValue >= underlayingValue;
         } else if (takeStack.isEmpty() && underlayingValue === 14 && cardValue === 5) {
             return true;

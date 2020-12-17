@@ -25,7 +25,7 @@
     <body>
         <script>
             (() => {
-                var gameObject = new ShitHeadHandler("{{playerName}}");
+                var gameObject = new ShitHeadHandler("{{playerName}}", true);
                 config.scene.push(gameObject);
                 new Phaser.Game(config);
                 window.onbeforeunload = () => gameObject.server.close();
